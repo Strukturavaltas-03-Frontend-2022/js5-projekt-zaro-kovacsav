@@ -55,8 +55,10 @@ const updateUser = (user) => {
   console.log("Módosítás");
 };
 
-const deleteUser = (user) => {
-  console.log("Törlés");
+const deleteUser = async (row, userId) => {
+  //console.log("Törlés, row:", row.rowIndex);
+  await deleteUserInDatabase(userId);
+  document.querySelector("table").deleteRow(row.rowIndex);
 };
 
 const setIconsInDOM = (row, user, updateOrDelete) => {
@@ -70,11 +72,17 @@ const setIconsInDOM = (row, user, updateOrDelete) => {
     i.addEventListener("click", () => updateUser(user));
   } else {
     i.classList.add("fa-trash-o");
-    i.addEventListener("click", () => deleteUser(user.id));
+    i.addEventListener("click", () => deleteUser(row, user.id));
   }
 };
 
+const emptyTableRows = () => {
+  const rows = document.querySelectorAll("tr");
+  console.log(rows.length);
+};
+
 const setDOM = (userList) => {
+  //emptyTableRows();
   userList.forEach((user) => {
     const tbody = document.querySelector(".table__body");
     const row = document.createElement("tr");
@@ -89,10 +97,10 @@ const setDOM = (userList) => {
   });
 };
 
-const main = async () => {
+const updateDOM = async () => {
   users = await getAllUsers();
-  console.log(users);
+  //console.log(users);
   setDOM(users);
 };
 
-main();
+updateDOM();
