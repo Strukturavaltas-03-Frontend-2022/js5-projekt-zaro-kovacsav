@@ -26,13 +26,13 @@ const getAllUsers = async () => {
 };
 
 // read - get one user
-const getOneUsers = async (id) => {
+const getOneUser = async (id) => {
   const response = await fetch(`${apiUrl}users/${id}`);
   return response.json();
 };
 
 // update user
-const updateUser = async (user) => {
+const updateUserInDatabase = async (user) => {
   const response = await fetch(`${apiUrl}users/${id}`, {
     method: "POST",
     body: JSON.stringify({
@@ -45,10 +45,33 @@ const updateUser = async (user) => {
 };
 
 // delete user
-const deleteUser = async (id) => {
+const deleteUserInDatabase = async (id) => {
   const response = await fetch(`${apiUrl}users/${id}`, {
     method: "DELETE",
   });
+};
+
+const updateUser = (user) => {
+  console.log("Módosítás");
+};
+
+const deleteUser = (user) => {
+  console.log("Törlés");
+};
+
+const setIconsInDOM = (row, user, updateOrDelete) => {
+  let td = document.createElement("td");
+  row.appendChild(td);
+  let i = document.createElement("i");
+  td.appendChild(i);
+  i.classList.add("fa");
+  if (updateOrDelete === "update") {
+    i.classList.add("fa-pencil-square-o");
+    i.addEventListener("click", () => updateUser(user));
+  } else {
+    i.classList.add("fa-trash-o");
+    i.addEventListener("click", () => deleteUser(user.id));
+  }
 };
 
 const setDOM = (userList) => {
@@ -61,23 +84,10 @@ const setDOM = (userList) => {
       row.appendChild(td);
       td.textContent = user[prop];
     });
-    /*row.appendChild(td);
-    td.textContent = user.name;
-    row.appendChild(td);
-    td.textContent = user.email;
-    row.appendChild(td);
-    td.textContent = user.adress;*/
-    /* ide jönnek a gombok
-    const p = document.createElement("p");
-    charatcertDiv.appendChild(p);
-    p.classList.add("name");
-    p.textContent = element.name;
-    p.addEventListener("click", () => selectCharacter(element));
-    */
+    setIconsInDOM(row, user, "update");
+    setIconsInDOM(row, user, "delete");
   });
 };
-
-//console.log(
 
 const main = async () => {
   users = await getAllUsers();

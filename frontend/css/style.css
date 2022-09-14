@@ -1,7 +1,22 @@
 table {
+  border-collapse: collapse;
   width: 100%;
 }
 
 th {
   line-height: 2rem;
+}
+
+tr:nth-child(even) {
+  background-color: #ddf0fa;
+}
+
+th, td {
+  border-bottom: 1px solid #ddd;
+  padding: 15px;
+  text-align: left;
+}
+
+i:hover {
+  cursor: pointer;
 }
