@@ -11,9 +11,9 @@ const createNewUser = async (user) => {
     body: JSON.stringify({
       name: `${user.name}`,
       email: `${user.email}`,
-      adress: `${user.adress}`,
+      address: `${user.address}`,
     }),
-    headers: { "content-type": "application/json" },
+    headers: { "Content-Type": "application/json" },
   });
 };
 
@@ -28,20 +28,22 @@ const getAllUsers = async () => {
 // read - get one user
 const getOneUser = async (id) => {
   const response = await fetch(`${apiUrl}users/${id}`);
-  return response.json();
+  const user = await response.json();
+  return user;
 };
 
 // update user
 const updateUserInDatabase = async (user) => {
-  const response = await fetch(`${apiUrl}users/${id}`, {
+  const response = await fetch(`${apiUrl}users/${user.id}`, {
     method: "POST",
     body: JSON.stringify({
       name: `${user.name}`,
       email: `${user.email}`,
-      adress: `${user.adress}`,
+      address: `${user.address}`,
     }),
-    headers: { "content-type": "application/json" },
+    headers: { "Content-Type": "application/json" },
   });
+  console.log(response);
 };
 
 // delete user
@@ -51,28 +53,75 @@ const deleteUserInDatabase = async (id) => {
   });
 };
 
-const updateUser = (user) => {
-  console.log("Módosítás");
+const changeIcons = (row, user, method) => {
+  const updateIcons = row.querySelectorAll(".fa");
+  // ki kell törölni, hogy az eseményfigyelő is eltűnjön
+  updateIcons.forEach((icon) => icon.parentNode.remove());
+  if (method === "update") {
+    setIconsInDOM(row, user, "save");
+    setIconsInDOM(row, user, "undo");
+  } else {
+    setIconsInDOM(row, user, "update");
+    setIconsInDOM(row, user, "delete");
+  }
 };
 
-const deleteUser = async (row, userId) => {
+const removeInputCellsActive = (row) => {
+  row.querySelectorAll("input").forEach((item) => {
+    item.disabled = true;
+    item.classList.remove("input__active");
+  });
+};
+
+const saveUpdate = async (row, user) => {
+  changeIcons(row, user, "endUpdate");
+  const inputFileds = row.querySelectorAll("input");
+  console.log("inputFileds: ", inputFileds[1].value);
+  user.name = inputFileds[1].value;
+  user.email = inputFileds[2].value;
+  user.address = inputFileds[3].value;
+  removeInputCellsActive(row);
+  await updateUserInDatabase(user);
+};
+
+const undoUpdate = (row, user) => {
+  changeIcons(row, user, "endUpdate");
+  removeInputCellsActive(row);
+};
+
+const updateUser = (row, user) => {
+  console.log("Módosítás", row.querySelectorAll("input"));
+  changeIcons(row, user, "update");
+  row.querySelectorAll("input").forEach((item) => {
+    item.disabled = false;
+    item.classList.add("input__active");
+  });
+};
+
+const deleteUser = async (row, user) => {
   //console.log("Törlés, row:", row.rowIndex);
-  await deleteUserInDatabase(userId);
+  await deleteUserInDatabase(user.id);
   document.querySelector("table").deleteRow(row.rowIndex);
 };
 
-const setIconsInDOM = (row, user, updateOrDelete) => {
+const setIconsInDOM = (row, user, method) => {
   let td = document.createElement("td");
   row.appendChild(td);
   let i = document.createElement("i");
   td.appendChild(i);
   i.classList.add("fa");
-  if (updateOrDelete === "update") {
+  if (method === "update") {
     i.classList.add("fa-pencil-square-o");
-    i.addEventListener("click", () => updateUser(user));
-  } else {
+    i.addEventListener("click", () => updateUser(row, user));
+  } else if (method === "delete") {
     i.classList.add("fa-trash-o");
-    i.addEventListener("click", () => deleteUser(row, user.id));
+    i.addEventListener("click", () => deleteUser(row, user));
+  } else if (method === "save") {
+    i.classList.add("fa-floppy-o");
+    i.addEventListener("click", () => saveUpdate(row, user));
+  } else if (method === "undo") {
+    i.classList.add("fa-undo");
+    i.addEventListener("click", () => undoUpdate(row, user));
   }
 };
 
@@ -82,7 +131,6 @@ const emptyTableRows = () => {
 };
 
 const setDOM = (userList) => {
-  //emptyTableRows();
   userList.forEach((user) => {
     const tbody = document.querySelector(".table__body");
     const row = document.createElement("tr");
@@ -90,7 +138,10 @@ const setDOM = (userList) => {
     userProperties.forEach((prop) => {
       const td = document.createElement("td");
       row.appendChild(td);
-      td.textContent = user[prop];
+      const input = document.createElement("input");
+      input.disabled = true;
+      td.appendChild(input);
+      input.value = user[prop];
     });
     setIconsInDOM(row, user, "update");
     setIconsInDOM(row, user, "delete");
