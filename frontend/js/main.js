@@ -35,7 +35,7 @@ const getOneUser = async (id) => {
 // update user
 const updateUserInDatabase = async (user) => {
   const response = await fetch(`${apiUrl}users/${user.id}`, {
-    method: "POST",
+    method: "PATCH",
     body: JSON.stringify({
       name: `${user.name}`,
       email: `${user.email}`,
@@ -71,6 +71,10 @@ const removeInputCellsActive = (row) => {
     item.disabled = true;
     item.classList.remove("input__active");
   });
+};
+
+const validateInputFields = (name, email, address) => {
+  return true;
 };
 
 const saveUpdate = async (row, user) => {
@@ -148,10 +152,61 @@ const setDOM = (userList) => {
   });
 };
 
-const updateDOM = async () => {
-  users = await getAllUsers();
-  //console.log(users);
-  setDOM(users);
+const setnewUserButton = () => {
+  const newUserButton = document.querySelector(".newUser");
+  newUserButton.addEventListener("click", () => setNewUser());
 };
 
-updateDOM();
+// az email egyedi, nem lehet ugyanaz
+const insertUserToTable = async (newUserEmail) => {
+  console.log(newUserEmail);
+  users = await getAllUsers();
+  console.log(users);
+  const user = users.filter((item) => item.email === newUserEmail);
+  console.log("New user: ", user.name);
+  const tbody = document.querySelector(".table__body");
+  const firstrow = tbody.firstChild;
+  const row = document.createElement("tr");
+  tbody.insertBefore(row, firstrow);
+  userProperties.forEach((prop) => {
+    const td = document.createElement("td");
+    row.appendChild(td);
+    const input = document.createElement("input");
+    input.disabled = true;
+    td.appendChild(input);
+    input.value = user[prop];
+  });
+  setIconsInDOM(row, user, "update");
+  setIconsInDOM(row, user, "delete");
+};
+
+const emptyInputFields = () => {
+  document.querySelector(".name__input").value = "";
+  document.querySelector(".email__input").value = "";
+  document.querySelector(".address__input").value = "";
+};
+
+const setNewUser = async () => {
+  const nameInput = document.querySelector(".name__input").value;
+  const emailInput = document.querySelector(".email__input").value;
+  const addressInput = document.querySelector(".address__input").value;
+  if (validateInputFields(nameInput, emailInput, addressInput)) {
+    let user = {};
+    user.name = nameInput;
+    user.email = emailInput;
+    user.address = addressInput;
+    await createNewUser(user);
+    emptyInputFields();
+    await insertUserToTable(user.email);
+  } else {
+    alert("Hibás adatok!");
+  }
+};
+
+const main = async () => {
+  users = await getAllUsers();
+  setDOM(users);
+  setnewUserButton();
+};
+
+main();
