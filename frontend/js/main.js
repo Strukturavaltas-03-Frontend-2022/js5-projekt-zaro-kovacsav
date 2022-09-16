@@ -6,7 +6,7 @@ let users = [];
 
 // create new user
 const createNewUser = async (user) => {
-  const response = await fetch(`${apiUrl}users`, {
+  await fetch(`${apiUrl}users`, {
     method: "POST",
     body: JSON.stringify({
       name: `${user.name}`,
@@ -15,6 +15,7 @@ const createNewUser = async (user) => {
     }),
     headers: { "Content-Type": "application/json" },
   });
+  console.log("before create");
 };
 
 // read - get all users
@@ -54,7 +55,7 @@ const deleteUserInDatabase = async (id) => {
 };
 
 const changeIcons = (row, user, method) => {
-  const updateIcons = row.querySelectorAll(".fa");
+  const updateIcons = row.querySelectorAll(".row__button");
   // ki kell törölni, hogy az eseményfigyelő is eltűnjön
   updateIcons.forEach((icon) => icon.parentNode.remove());
   if (method === "update") {
@@ -77,6 +78,20 @@ const validateInputFields = (name, email, address) => {
   return true;
 };
 
+// a szerkesztés gombra kattintásnál a soron kívül minden más gomb legyen inaktív
+const setButtonsDisabled = (row) => {
+  const allRowButtons = document.querySelectorAll(".row__button");
+  allRowButtons.forEach((item) => (item.disabled = true));
+  row
+    .querySelectorAll(".row__button")
+    .forEach((item) => (item.disabled = false));
+};
+
+const setButtonsAbled = () => {
+  const allRowButtons = document.querySelectorAll(".row__button");
+  allRowButtons.forEach((item) => (item.disabled = false));
+};
+
 const saveUpdate = async (row, user) => {
   changeIcons(row, user, "endUpdate");
   const inputFileds = row.querySelectorAll("input");
@@ -91,11 +106,13 @@ const saveUpdate = async (row, user) => {
 const undoUpdate = (row, user) => {
   changeIcons(row, user, "endUpdate");
   removeInputCellsActive(row);
+  setButtonsAbled();
 };
 
 const updateUser = (row, user) => {
   console.log("Módosítás", row.querySelectorAll("input"));
   changeIcons(row, user, "update");
+  setButtonsDisabled(row);
   row.querySelectorAll("input").forEach((item) => {
     item.disabled = false;
     item.classList.add("input__active");
@@ -105,27 +122,30 @@ const updateUser = (row, user) => {
 const deleteUser = async (row, user) => {
   //console.log("Törlés, row:", row.rowIndex);
   await deleteUserInDatabase(user.id);
-  document.querySelector("table").deleteRow(row.rowIndex);
+  document.querySelector(".table").deleteRow(row.rowIndex);
 };
 
 const setIconsInDOM = (row, user, method) => {
   let td = document.createElement("td");
   row.appendChild(td);
+  let button = document.createElement("button");
+  button.classList.add("row__button");
+  td.appendChild(button);
   let i = document.createElement("i");
-  td.appendChild(i);
+  button.appendChild(i);
   i.classList.add("fa");
   if (method === "update") {
     i.classList.add("fa-pencil-square-o");
-    i.addEventListener("click", () => updateUser(row, user));
+    button.addEventListener("click", () => updateUser(row, user));
   } else if (method === "delete") {
     i.classList.add("fa-trash-o");
-    i.addEventListener("click", () => deleteUser(row, user));
+    button.addEventListener("click", () => deleteUser(row, user));
   } else if (method === "save") {
     i.classList.add("fa-floppy-o");
-    i.addEventListener("click", () => saveUpdate(row, user));
+    button.addEventListener("click", () => saveUpdate(row, user));
   } else if (method === "undo") {
     i.classList.add("fa-undo");
-    i.addEventListener("click", () => undoUpdate(row, user));
+    button.addEventListener("click", () => undoUpdate(row, user));
   }
 };
 
@@ -157,13 +177,13 @@ const setnewUserButton = () => {
   newUserButton.addEventListener("click", () => setNewUser());
 };
 
-// az email egyedi, nem lehet ugyanaz
+// az email egyedi, nem lehet ugyanaz, arra tudunk szűrni
 const insertUserToTable = async (newUserEmail) => {
-  console.log(newUserEmail);
   users = await getAllUsers();
   console.log(users);
+  console.log(newUserEmail);
   const user = users.filter((item) => item.email === newUserEmail);
-  console.log("New user: ", user.name);
+  console.log("New user: ", user[0].name);
   const tbody = document.querySelector(".table__body");
   const firstrow = tbody.firstChild;
   const row = document.createElement("tr");
@@ -174,7 +194,7 @@ const insertUserToTable = async (newUserEmail) => {
     const input = document.createElement("input");
     input.disabled = true;
     td.appendChild(input);
-    input.value = user[prop];
+    input.value = user[0][prop];
   });
   setIconsInDOM(row, user, "update");
   setIconsInDOM(row, user, "delete");
@@ -196,6 +216,7 @@ const setNewUser = async () => {
     user.email = emailInput;
     user.address = addressInput;
     await createNewUser(user);
+    console.log("after create");
     emptyInputFields();
     await insertUserToTable(user.email);
   } else {
