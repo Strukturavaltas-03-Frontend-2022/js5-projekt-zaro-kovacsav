@@ -74,7 +74,18 @@ const removeInputCellsActive = (row) => {
   });
 };
 
-const validateInputFields = (name, email, address) => {
+const validateNameInputField = (row) => {
+  const namePattern =
+    /^([a-zA-Z]{2,}\s[a-zA-Z]{1,}'?-?[a-zA-Z]{2,}\s?([a-zA-Z]{1,})?)$/;
+  // /^([A-Űa-ű]{0,10} ?[A-Ű][a-ű]{2,20} [A-Ű][a-ű]{2,20}( [A-Ű][a-ű]{2,20})?)$/;
+  const inputName = row.querySelector(".name");
+  inputName.addEventListener("keyup", (ev) => {
+    if (namePattern.test(inputName.value)) {
+      inputName.classList.remove("invalid");
+    } else {
+      inputName.classList.add("invalid");
+    }
+  });
   return true;
 };
 
@@ -117,6 +128,7 @@ const updateUser = (row, user) => {
     item.disabled = false;
     item.classList.add("input__active");
   });
+  validateNameInputField(row);
 };
 
 const deleteUser = async (row, user) => {
@@ -166,6 +178,7 @@ const setDOM = (userList) => {
       input.disabled = true;
       td.appendChild(input);
       input.value = user[prop];
+      input.classList.add(prop);
     });
     setIconsInDOM(row, user, "update");
     setIconsInDOM(row, user, "delete");

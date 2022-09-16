@@ -32,3 +32,8 @@ input {
 i:hover {
   cursor: pointer;
 }
+
+.invalid {
+  color: rgb(189, 2, 2);
+  border-width: 5px;
+}
