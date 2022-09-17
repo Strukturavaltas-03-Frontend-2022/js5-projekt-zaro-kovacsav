@@ -74,18 +74,37 @@ const removeInputCellsActive = (row) => {
   });
 };
 
+const setInputFieldValidOrInvalid = (inputFieldName, pattern) => {
+  inputFieldName.addEventListener("keyup", (ev) => {
+    if (pattern.test(inputFieldName.value)) {
+      inputFieldName.classList.remove("invalid");
+    } else {
+      inputFieldName.classList.add("invalid");
+    }
+  });
+};
+
 const validateNameInputField = (row) => {
   const namePattern =
-    /^([a-zA-Z]{2,}\s[a-zA-Z]{1,}'?-?[a-zA-Z]{2,}\s?([a-zA-Z]{1,})?)$/;
-  // /^([A-Űa-ű]{0,10} ?[A-Ű][a-ű]{2,20} [A-Ű][a-ű]{2,20}( [A-Ű][a-ű]{2,20})?)$/;
+    // /^([a-zA-Z]{2,}\s[a-zA-Z]{1,}'?-?[a-zA-Z]{2,}\s?([a-zA-Z]{1,})?)$/;
+    /^([A-ZÁÉÓÖŐÚÜŰa-záéóöőüű.]{0,10} ?[A-ZÁÉÓÖŐÚÜŰ][a-záéóöőüű'\-]{1,20} [A-ZÁÉÓÖŐÚÜŰ][a-záéóöőüű'\-]{1,20}( [A-ZÁÉÓÖŐÚÜŰ][a-záéóöőüű]{1,20})?)$/;
+  // nagyon egyszerű validáció
+  const emailPattern = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
+  const addressPattern = /^[a-zA-Z0-9-]+$/;
   const inputName = row.querySelector(".name");
+  const inputEmail = row.querySelector(".email");
+  const inputAddress = row.querySelector(".address");
+  setInputFieldValidOrInvalid(inputName, namePattern);
+  setInputFieldValidOrInvalid(inputEmail, emailPattern);
+  setInputFieldValidOrInvalid(inputAddress, addressPattern);
+  /*
   inputName.addEventListener("keyup", (ev) => {
     if (namePattern.test(inputName.value)) {
       inputName.classList.remove("invalid");
     } else {
       inputName.classList.add("invalid");
     }
-  });
+  });*/
   return true;
 };
 
