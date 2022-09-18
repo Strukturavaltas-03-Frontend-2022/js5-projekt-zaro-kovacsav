@@ -1,10 +1,20 @@
 import { apiUrl, userProperties } from "../assets/settings.js";
 
 let users = [];
+const messageBox = document.querySelector(".p__message");
+const nameInput = document.querySelector(".name__input");
+const emailInput = document.querySelector(".email__input");
+const addressInput = document.querySelector(".address__input");
+const namePattern =
+  // /^([a-zA-Z]{2,}\s[a-zA-Z]{1,}'?-?[a-zA-Z]{2,}\s?([a-zA-Z]{1,})?)$/;
+  /^([A-ZÁÉÓÖŐÚÜŰa-záéóöőüű.]{0,10} ?[A-ZÁÉÓÖŐÚÜŰ][a-záéóöőüű'\-]{1,20} [A-ZÁÉÓÖŐÚÜŰ][a-záéóöőüű'\-]{1,20}( [A-ZÁÉÓÖŐÚÜŰ][a-záéóöőüű]{1,20})?)$/;
+// nagyon egyszerű email validáció:
+const emailPattern = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
+const addressPattern = /^[a-zA-Z0-9-. ]{5,50}$/;
 
 // -----------    CRUD    ---------------------------
 
-// create new user
+// create - új user mentése
 const createNewUser = async (user) => {
   await fetch(`${apiUrl}users`, {
     method: "POST",
@@ -15,25 +25,24 @@ const createNewUser = async (user) => {
     }),
     headers: { "Content-Type": "application/json" },
   });
-  console.log("before create");
+  //console.log("before create");
 };
 
-// read - get all users
+// read - az összes users lekérdezése
 const getAllUsers = async () => {
   const response = await fetch(`${apiUrl}users`);
   const users = await response.json();
-  //console.log(users);
   return users;
 };
 
-// read - get one user
+// read - egy user lekérdezése
 const getOneUser = async (id) => {
   const response = await fetch(`${apiUrl}users/${id}`);
   const user = await response.json();
   return user;
 };
 
-// update user
+// update - a user adatainak frissítése
 const updateUserInDatabase = async (user) => {
   const response = await fetch(`${apiUrl}users/${user.id}`, {
     method: "PATCH",
@@ -44,16 +53,18 @@ const updateUserInDatabase = async (user) => {
     }),
     headers: { "Content-Type": "application/json" },
   });
-  console.log(response);
+  //console.log(response);
 };
 
-// delete user
+// delete - egy user törlése
 const deleteUserInDatabase = async (id) => {
   const response = await fetch(`${apiUrl}users/${id}`, {
     method: "DELETE",
   });
 };
 
+// a user szerkesztésénél az ikonok és ezzel együtt a függvények cseréje
+// a metódusoknak megfelelően
 const changeIcons = (row, user, method) => {
   const updateIcons = row.querySelectorAll(".row__button");
   // ki kell törölni, hogy az eseményfigyelő is eltűnjön
@@ -67,6 +78,7 @@ const changeIcons = (row, user, method) => {
   }
 };
 
+// az input mezők inaktiválása
 const removeInputCellsActive = (row) => {
   row.querySelectorAll("input").forEach((item) => {
     item.disabled = true;
@@ -74,38 +86,39 @@ const removeInputCellsActive = (row) => {
   });
 };
 
+// az input mező folyamtos validálása beírásnál
+// meg kell vizsgálni, hogy nem adtuk-e rá már a mezőkre az eseményfigyelőket
+// korábban, hogy ne legyen duplikálás
 const setInputFieldValidOrInvalid = (inputFieldName, pattern) => {
-  inputFieldName.addEventListener("keyup", (ev) => {
-    if (pattern.test(inputFieldName.value)) {
-      inputFieldName.classList.remove("invalid");
-    } else {
-      inputFieldName.classList.add("invalid");
-    }
-  });
+  if (!inputFieldName.classList.contains("eventListenerAlreadyAdded")) {
+    inputFieldName.addEventListener("keyup", (ev) => {
+      inputFieldName.classList.add("eventListenerAlreadyAdded");
+      if (pattern.test(inputFieldName.value)) {
+        inputFieldName.classList.remove("invalid");
+      } else {
+        inputFieldName.classList.add("invalid");
+      }
+    });
+  }
 };
 
-const validateNameInputField = (row) => {
-  const namePattern =
-    // /^([a-zA-Z]{2,}\s[a-zA-Z]{1,}'?-?[a-zA-Z]{2,}\s?([a-zA-Z]{1,})?)$/;
-    /^([A-ZÁÉÓÖŐÚÜŰa-záéóöőüű.]{0,10} ?[A-ZÁÉÓÖŐÚÜŰ][a-záéóöőüű'\-]{1,20} [A-ZÁÉÓÖŐÚÜŰ][a-záéóöőüű'\-]{1,20}( [A-ZÁÉÓÖŐÚÜŰ][a-záéóöőüű]{1,20})?)$/;
-  // nagyon egyszerű validáció
-  const emailPattern = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
-  const addressPattern = /^[a-zA-Z0-9-]+$/;
-  const inputName = row.querySelector(".name");
-  const inputEmail = row.querySelector(".email");
-  const inputAddress = row.querySelector(".address");
-  setInputFieldValidOrInvalid(inputName, namePattern);
-  setInputFieldValidOrInvalid(inputEmail, emailPattern);
-  setInputFieldValidOrInvalid(inputAddress, addressPattern);
+// a három input mező validásála mentés előtt
+const validateInputFields = (nameInput, emailInput, addressInput) => {
   /*
-  inputName.addEventListener("keyup", (ev) => {
-    if (namePattern.test(inputName.value)) {
-      inputName.classList.remove("invalid");
-    } else {
-      inputName.classList.add("invalid");
-    }
-  });*/
-  return true;
+  console.log(namePattern, nameInput.value);
+  console.log("namepattern: ", namePattern.test(nameInput.value));
+  console.log("emailpattern: ", emailPattern.test(emailInput.value));
+  console.log("addresspattern: ", addressPattern.test(addressInput.value));
+  */
+  if (
+    namePattern.test(nameInput.value) &&
+    emailPattern.test(emailInput.value) &&
+    addressPattern.test(addressInput.value)
+  ) {
+    return true;
+  } else {
+    return false;
+  }
 };
 
 // a szerkesztés gombra kattintásnál a soron kívül minden más gomb legyen inaktív
@@ -117,45 +130,81 @@ const setButtonsDisabled = (row) => {
     .forEach((item) => (item.disabled = false));
 };
 
+// a sorban az összes gomb disabled tulajdonságának visszavonása
 const setButtonsAbled = () => {
   const allRowButtons = document.querySelectorAll(".row__button");
   allRowButtons.forEach((item) => (item.disabled = false));
 };
 
+// a user adatok szerkesztett változatának mentése
 const saveUpdate = async (row, user) => {
-  changeIcons(row, user, "endUpdate");
   const inputFileds = row.querySelectorAll("input");
   console.log("inputFileds: ", inputFileds[1].value);
-  user.name = inputFileds[1].value;
-  user.email = inputFileds[2].value;
-  user.address = inputFileds[3].value;
-  removeInputCellsActive(row);
-  await updateUserInDatabase(user);
+  if (validateInputFields(inputFileds[1], inputFileds[2], inputFileds[3])) {
+    changeIcons(row, user, "endUpdate");
+    user.name = inputFileds[1].value;
+    user.email = inputFileds[2].value;
+    user.address = inputFileds[3].value;
+    removeInputCellsActive(row);
+    setButtonsAbled();
+    await updateUserInDatabase(user);
+  } else {
+    setNotification("Hibás adatok!");
+    //alert("Hibás adatok!");
+  }
 };
 
+// vissza állítjuk a user eredeti adatait
+const setOriginalValuesOfUser = (row, user) => {
+  const inputFileds = row.querySelectorAll("input");
+  inputFileds[1].value = user.name;
+  inputFileds[2].value = user.email;
+  inputFileds[3].value = user.address;
+};
+
+// leszedjük a beviteli mezőről az invalid osztályt undo esetén
+const removeInvalidClassFromInputFileds = (row) => {
+  const inputFileds = row.querySelectorAll("input");
+  inputFileds.forEach((item) => item.classList.remove("invalid"));
+};
+
+// a szerkesztés visszavonása és az eredeti állapot visszaállítása
 const undoUpdate = (row, user) => {
   changeIcons(row, user, "endUpdate");
   removeInputCellsActive(row);
   setButtonsAbled();
+  setOriginalValuesOfUser(row, user);
+  removeInvalidClassFromInputFileds(row);
 };
 
+// a user adatainak szerkesztése:
+// ikon és eseménycsere, a többi gomb inaktiválása
+// a beviteli mezők aktiválása, a bevitel folyamatos validálása
 const updateUser = (row, user) => {
   console.log("Módosítás", row.querySelectorAll("input"));
   changeIcons(row, user, "update");
   setButtonsDisabled(row);
-  row.querySelectorAll("input").forEach((item) => {
+  const inputFileds = row.querySelectorAll("input");
+  // az ID-t tartalmazó elemet ki kell venni a tömbből, az nem szerkeszthető
+  const inputFiledsArray = Array.from(inputFileds).slice(1);
+  inputFiledsArray.forEach((item) => {
     item.disabled = false;
     item.classList.add("input__active");
   });
-  validateNameInputField(row);
+  setInputFieldValidOrInvalid(inputFiledsArray[0], namePattern);
+  setInputFieldValidOrInvalid(inputFiledsArray[1], emailPattern);
+  setInputFieldValidOrInvalid(inputFiledsArray[2], addressPattern);
 };
 
+// a user törlése
 const deleteUser = async (row, user) => {
   //console.log("Törlés, row:", row.rowIndex);
   await deleteUserInDatabase(user.id);
   document.querySelector(".table").deleteRow(row.rowIndex);
 };
 
+// a szerkesztő/törlő/mentő/visszavonó ikonok létrehozása és a hozzájuk
+// tartozó függvények beállítása
 const setIconsInDOM = (row, user, method) => {
   let td = document.createElement("td");
   row.appendChild(td);
@@ -185,6 +234,7 @@ const emptyTableRows = () => {
   console.log(rows.length);
 };
 
+// a táblázat feltöltése adatokkal és ikonokkal
 const setDOM = (userList) => {
   userList.forEach((user) => {
     const tbody = document.querySelector(".table__body");
@@ -204,11 +254,17 @@ const setDOM = (userList) => {
   });
 };
 
+// az új felhasználó gombjának beállítása
 const setnewUserButton = () => {
   const newUserButton = document.querySelector(".newUser");
   newUserButton.addEventListener("click", () => setNewUser());
 };
 
+// az új user felvétele a táblázat első sorába
+// mivel mi nem adhatunk meg neki ID-t, el kell küldeni az adatbázisba, ott kap egyet
+// és vissza kell kérni, hogy már ezt is be tudjuk írni a táblázatba
+// de nem tudjuk csak ezt az egyet lekérdezni, mert még nem tudjuk az ID-jét
+// mindet le kell kérdezni, és aztán leszűrni
 // az email egyedi, nem lehet ugyanaz, arra tudunk szűrni
 const insertUserToTable = async (newUserEmail) => {
   users = await getAllUsers();
@@ -232,34 +288,52 @@ const insertUserToTable = async (newUserEmail) => {
   setIconsInDOM(row, user, "delete");
 };
 
+// a beviteli mezők kiürítése az új user mentése után
 const emptyInputFields = () => {
   document.querySelector(".name__input").value = "";
   document.querySelector(".email__input").value = "";
   document.querySelector(".address__input").value = "";
 };
 
+// új user beviteli mezőinek folyamatos validálása
+const validateNewUserInputFieldsOnKeyup = () => {
+  setInputFieldValidOrInvalid(nameInput, namePattern);
+  setInputFieldValidOrInvalid(emailInput, emailPattern);
+  setInputFieldValidOrInvalid(addressInput, addressPattern);
+};
+
+// új user felvétele
+// validálás után beállítjuk a user adatait, elküldjük az adatbázisba
+// ürítjük a beviteli mezőket, beszúrjuk a táblázat első sorába
 const setNewUser = async () => {
-  const nameInput = document.querySelector(".name__input").value;
-  const emailInput = document.querySelector(".email__input").value;
-  const addressInput = document.querySelector(".address__input").value;
+  console.log(addressInput.value);
   if (validateInputFields(nameInput, emailInput, addressInput)) {
     let user = {};
-    user.name = nameInput;
-    user.email = emailInput;
-    user.address = addressInput;
+    user.name = nameInput.value;
+    user.email = emailInput.value;
+    user.address = addressInput.value;
     await createNewUser(user);
     console.log("after create");
     emptyInputFields();
     await insertUserToTable(user.email);
   } else {
-    alert("Hibás adatok!");
+    setNotification("Hibás adatok!");
+    //alert("Hibás adatok!");
   }
+};
+
+const setNotification = (message) => {
+  messageBox.textContent = message;
+  setTimeout(function () {
+    messageBox.textContent = "";
+  }, 5000);
 };
 
 const main = async () => {
   users = await getAllUsers();
   setDOM(users);
   setnewUserButton();
+  validateNewUserInputFieldsOnKeyup();
 };
 
 main();

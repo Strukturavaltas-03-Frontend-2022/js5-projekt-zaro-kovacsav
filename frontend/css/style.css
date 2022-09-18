@@ -1,3 +1,21 @@
+header {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0px;
+  padding-top: 20px;
+  background-color: white;
+}
+
+.td__message {
+  width: 10%;
+}
+
+.p__message {
+  background-color: red;
+  color: white;
+  /*padding: 30px;*/
+}
+
 table {
   border-collapse: collapse;
   width: 100%;
@@ -5,6 +23,11 @@ table {
 
 th {
   line-height: 2rem;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 154px;
+  padding-top: 20px;
+  background-color: white;
 }
 
 tr:nth-child(even) {
