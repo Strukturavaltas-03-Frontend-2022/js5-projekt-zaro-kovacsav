@@ -21,6 +21,10 @@
       </div>
 
       <div class="header__right">
+        <div class="language__icon__div">
+          <img class="language__icon hun" src="./assets/img/hun_flag_icon.jpg" alt="hungarian language">
+          <img class="language__icon en" src="./assets/img/eng_flag_icon.jpg" alt="english language">
+        </div>
         <div class="header__search">
           <input type="text" class="search__input" placeholder="Search for...">
           <button class="search__btn">
@@ -38,34 +42,34 @@
     <aside>
       <nav class="main__nav">
         <ul>
-          <li class="li--dark"><span>CORE</span></li>
+          <li class="li--dark"><span class="core">CORE</span></li>
           <li class="li--black">
             <i class="fa fa-tachometer"></i>
-            <span>User admin</span>
+            <span class="userAdmin">User admin</span>
           </li>
-          <li class="li--dark"><span>INTERFACE</span></li>
+          <li class="li--dark"><span class="interface">INTERFACE</span></li>
           <li class="li__details li--gray">
             <div>
               <i class="fa fa-windows"></i>
-              <span>Layouts</span>
+              <span class="layouts">Layouts</span>
             </div>
             <b>></b>
           </li>
           <li class="li__details li--gray">
             <div>
               <i class="fa fa-bookmark"></i>
-              <span>Pages</span>
+              <span class="pages">Pages</span>
             </div>
             <b>></b>
           </li>
-          <li class="li--dark"><span>ADDONS</span></li>
+          <li class="li--dark"><span class="addons">ADDONS</span></li>
           <li class="li--gray">
             <i class="fa fa-area-chart"></i>
-            <span>Cahrts</span>
+            <span class="charts">Cahrts</span>
           </li>
           <li class="li--gray">
             <i class="fa fa-table"></i>
-            <span>Labels</span>
+            <span class="labels">Labels</span>
           </li>
         </ul>
       </nav>
@@ -74,7 +78,7 @@
     <section>
 
       <header class="section__header">
-        <h1>User adminstration</h1>
+        <h1 class="userAdminSection">User administration</h1>
 
         <table class="table__newUser">
           <tbody>
@@ -83,13 +87,13 @@
                 <p class="p__message"></p>
               </td>
               <td>
-                <input class="input name__input" type="text" placeholder="Név">
+                <input class="input name__input" type="text" placeholder="Name">
               </td>
               <td>
-                <input class="input email__input" type="text" placeholder="Email cím">
+                <input class="input email__input" type="text" placeholder="Email address">
               </td>
               <td>
-                <input class="input address__input" type="text" placeholder="Postai cím">
+                <input class="input address__input" type="text" placeholder="Postal address">
               </td>
               <td>
                 <button class="newUser">Save new user</button>
@@ -103,15 +107,13 @@
       <table class="table">
         <thead>
           <th class="thead__id">Id</th>
-          <th>Name</th>
-          <th>Email address</th>
-          <th>Postal address</th>
-          <th class="update__column">Update</th>
-          <th class="delete__column">Delete</th>
+          <th class="nameTableHead">Name</th>
+          <th class="emailTableHead">Email address</th>
+          <th class="posttableHead">Postal address</th>
+          <th class="update__column"></th>
+          <th class="delete__column"></th>
         </thead>
-        <tbody class="table__body">
 
-        </tbody>
       </table>
     </section>
 
