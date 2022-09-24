@@ -1,7 +1,7 @@
 import { apiUrl, userProperties } from "../assets/settings.js";
 
 let users = [];
-const messageBox = document.querySelector(".p__message");
+let isUserUnderEdit = false;
 const nameInput = document.querySelector(".name__input");
 const emailInput = document.querySelector(".email__input");
 const addressInput = document.querySelector(".address__input");
@@ -104,12 +104,6 @@ const setInputFieldValidOrInvalid = (inputFieldName, pattern) => {
 
 // a három input mező validásála mentés előtt
 const validateInputFields = (nameInput, emailInput, addressInput) => {
-  /*
-  console.log(namePattern, nameInput.value);
-  console.log("namepattern: ", namePattern.test(nameInput.value));
-  console.log("emailpattern: ", emailPattern.test(emailInput.value));
-  console.log("addresspattern: ", addressPattern.test(addressInput.value));
-  */
   if (
     namePattern.test(nameInput.value) &&
     emailPattern.test(emailInput.value) &&
@@ -130,7 +124,7 @@ const setButtonsDisabled = (row) => {
     .forEach((item) => (item.disabled = false));
 };
 
-// a sorban az összes gomb disabled tulajdonságának visszavonása
+// az összes gomb disabled tulajdonságának visszavonása
 const setButtonsAbled = () => {
   const allRowButtons = document.querySelectorAll(".row__button");
   allRowButtons.forEach((item) => (item.disabled = false));
@@ -146,10 +140,12 @@ const saveUpdate = async (row, user) => {
     user.email = inputFileds[2].value;
     user.address = inputFileds[3].value;
     removeInputCellsActive(row);
-    setButtonsAbled();
+    //setButtonsAbled();
     await updateUserInDatabase(user);
+    isUserUnderEdit = false;
+    setNotification("Sikeres mentés!", true);
   } else {
-    setNotification("Hibás adatok!");
+    setNotification("Hibás adatok!", false);
     //alert("Hibás adatok!");
   }
 };
@@ -175,32 +171,48 @@ const undoUpdate = (row, user) => {
   setButtonsAbled();
   setOriginalValuesOfUser(row, user);
   removeInvalidClassFromInputFileds(row);
+  isUserUnderEdit = false;
 };
 
 // a user adatainak szerkesztése:
 // ikon és eseménycsere, a többi gomb inaktiválása
 // a beviteli mezők aktiválása, a bevitel folyamatos validálása
 const updateUser = (row, user) => {
-  console.log("Módosítás", row.querySelectorAll("input"));
-  changeIcons(row, user, "update");
-  setButtonsDisabled(row);
-  const inputFileds = row.querySelectorAll("input");
-  // az ID-t tartalmazó elemet ki kell venni a tömbből, az nem szerkeszthető
-  const inputFiledsArray = Array.from(inputFileds).slice(1);
-  inputFiledsArray.forEach((item) => {
-    item.disabled = false;
-    item.classList.add("input__active");
-  });
-  setInputFieldValidOrInvalid(inputFiledsArray[0], namePattern);
-  setInputFieldValidOrInvalid(inputFiledsArray[1], emailPattern);
-  setInputFieldValidOrInvalid(inputFiledsArray[2], addressPattern);
+  if (!isUserUnderEdit) {
+    isUserUnderEdit = true;
+    console.log("Módosítás", row.querySelectorAll("input"));
+    changeIcons(row, user, "update");
+    // nem inaktiválni kell a gombokat, más a feladat
+    //setButtonsDisabled(row);
+    const inputFileds = row.querySelectorAll("input");
+    // az ID-t tartalmazó elemet ki kell venni a tömbből, az nem szerkeszthető
+    const inputFiledsArray = Array.from(inputFileds).slice(1);
+    inputFiledsArray.forEach((item) => {
+      item.disabled = false;
+      item.classList.add("input__active");
+    });
+    setInputFieldValidOrInvalid(inputFiledsArray[0], namePattern);
+    setInputFieldValidOrInvalid(inputFiledsArray[1], emailPattern);
+    setInputFieldValidOrInvalid(inputFiledsArray[2], addressPattern);
+  } else {
+    setNotification(
+      "Nem lehet szerkeszteni amíg egy user szerkesztés alatt van!!",
+      false
+    );
+  }
 };
 
 // a user törlése
 const deleteUser = async (row, user) => {
-  //console.log("Törlés, row:", row.rowIndex);
-  await deleteUserInDatabase(user.id);
-  document.querySelector(".table").deleteRow(row.rowIndex);
+  if (!isUserUnderEdit) {
+    await deleteUserInDatabase(user.id);
+    document.querySelector(".table").deleteRow(row.rowIndex);
+  } else {
+    setNotification(
+      "Nem lehet törölni amíg egy user szerkesztés alatt van!",
+      false
+    );
+  }
 };
 
 // a szerkesztő/törlő/mentő/visszavonó ikonok létrehozása és a hozzájuk
@@ -317,16 +329,30 @@ const setNewUser = async () => {
     console.log("after create");
     emptyInputFields();
     await insertUserToTable(user.email);
+    setNotification("Az új user fölvétele sikerült!", true);
   } else {
-    setNotification("Hibás adatok!");
+    setNotification("Hibás adatok!", false);
     //alert("Hibás adatok!");
   }
 };
 
-const setNotification = (message) => {
-  messageBox.textContent = message;
-  setTimeout(function () {
-    messageBox.textContent = "";
+const setNotification = (message, resultBoolean) => {
+  let messageBox = "";
+  if (!resultBoolean) {
+    messageBox = document.querySelector(".failure__div");
+  } else {
+    messageBox = document.querySelector(".success__div");
+  }
+  messageBox.classList.remove("display__none");
+  messageBox.classList.add("display__block");
+  const messageBoxH2 = messageBox.querySelector("h2");
+  messageBoxH2.textContent = message;
+
+  const setTimeOutNumber = setTimeout(function () {
+    clearTimeout(setTimeOutNumber);
+    messageBox.classList.add("display__none");
+    messageBox.classList.remove("display__block");
+    messageBoxH2.textContent = "";
   }, 5000);
 };
 

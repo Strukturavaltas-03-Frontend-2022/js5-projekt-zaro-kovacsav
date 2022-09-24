@@ -11,26 +11,27 @@
 </head>
 
 <body>
-
-  <header class="header--dark">
-    <div class="header__left">
-      <h3 class="header__title">
-        Admin Page
-      </h3>
-      <i class="fa fa-bars hamburger_menu"></i>
-    </div>
-
-    <div class="header__right">
-      <div class="header__search">
-        <input type="text" class="search__input" placeholder="Search for...">
-        <button class="search__btn">
-          <i class="fa fa-search" aria-hidden="true"></i>
-        </button>
+  <div class="header__div">
+    <header class="header--dark">
+      <div class="header__left">
+        <h3 class="header__title">
+          Admin Page
+        </h3>
+        <i class="fa fa-bars hamburger_menu"></i>
       </div>
-      <i class="fa fa-user icon--margin"></i>
-      <i class="fa fa-sort-desc icon--margin"></i>
-    </div>
-  </header>
+
+      <div class="header__right">
+        <div class="header__search">
+          <input type="text" class="search__input" placeholder="Search for...">
+          <button class="search__btn">
+            <i class="fa fa-search" aria-hidden="true"></i>
+          </button>
+        </div>
+        <i class="fa fa-user icon--margin"></i>
+        <i class="fa fa-sort-desc icon--margin"></i>
+      </div>
+    </header>
+  </div>
 
   <main>
 
@@ -91,7 +92,7 @@
                 <input class="input address__input" type="text" placeholder="Postai cím">
               </td>
               <td>
-                <button class="newUser">Új felhasználó</button>
+                <button class="newUser">Save new user</button>
               </td>
               <td></td>
             </tr>
@@ -101,12 +102,12 @@
 
       <table class="table">
         <thead>
-          <th>Azonosító</th>
-          <th>Név</th>
-          <th>Email cím</th>
-          <th>Postai cím</th>
-          <th class="update__column">Módosítás</th>
-          <th class="delete__column">Törlés</th>
+          <th class="thead__id">Id</th>
+          <th>Name</th>
+          <th>Email address</th>
+          <th>Postal address</th>
+          <th class="update__column">Update</th>
+          <th class="delete__column">Delete</th>
         </thead>
         <tbody class="table__body">
 
@@ -114,7 +115,17 @@
       </table>
     </section>
 
-    <script type="module" src="./js/main.js"></script>
+    <div class="failure__div display__none">
+      <h2 class="message">Hibás adatok!</h2>
+    </div>
+
+    <div class="success__div display__none">
+      <h2 class="message">Hibás adatok!</h2>
+    </div>
+
+  </main>
+
+  <script type="module" src="./js/main.js"></script>
 </body>
 
 </html>
