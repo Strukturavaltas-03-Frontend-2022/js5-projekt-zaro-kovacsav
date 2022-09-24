@@ -245,6 +245,7 @@ const setDOM = (userList) => {
       row.appendChild(td);
       const input = document.createElement("input");
       input.disabled = true;
+      input.classList.add("input");
       td.appendChild(input);
       input.value = user[prop];
       input.classList.add(prop);

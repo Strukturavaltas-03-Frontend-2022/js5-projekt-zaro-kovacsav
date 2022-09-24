@@ -11,48 +11,110 @@
 </head>
 
 <body>
-  <header>
-    <h1>Felhasználó adminisztráció</h1>
 
-    <table class="table__newUser">
-      <tbody>
-        <tr>
-          <td class="td__message">
-            <p class="p__message"></p>
-          </td>
-          <td>
-            <input class="name__input" type="text" placeholder="Név">
-          </td>
-          <td>
-            <input class="email__input" type="text" placeholder="Email cím">
-          </td>
-          <td>
-            <input class="address__input" type="text" placeholder="Postai cím">
-          </td>
-          <td>
-            <button class="newUser">Új felhasználó</button>
-          </td>
-          <td></td>
-        </tr>
-      </tbody>
-    </table>
+  <header class="header--dark">
+    <div class="header__left">
+      <h3 class="header__title">
+        Admin Page
+      </h3>
+      <i class="fa fa-bars hamburger_menu"></i>
+    </div>
+
+    <div class="header__right">
+      <div class="header__search">
+        <input type="text" class="search__input" placeholder="Search for...">
+        <button class="search__btn">
+          <i class="fa fa-search" aria-hidden="true"></i>
+        </button>
+      </div>
+      <i class="fa fa-user icon--margin"></i>
+      <i class="fa fa-sort-desc icon--margin"></i>
+    </div>
   </header>
 
-  <table class="table">
-    <thead>
-      <th>Azonosító</th>
-      <th>Név</th>
-      <th>Email cím</th>
-      <th>Postai cím</th>
-      <th class="update__column">Módosítás</th>
-      <th class="delete__column">Törlés</th>
-    </thead>
-    <tbody class="table__body">
+  <main>
 
-    </tbody>
-  </table>
+    <aside>
+      <nav class="main__nav">
+        <ul>
+          <li class="li--dark"><span>CORE</span></li>
+          <li class="li--black">
+            <i class="fa fa-tachometer"></i>
+            <span>User admin</span>
+          </li>
+          <li class="li--dark"><span>INTERFACE</span></li>
+          <li class="li__details li--gray">
+            <div>
+              <i class="fa fa-windows"></i>
+              <span>Layouts</span>
+            </div>
+            <b>></b>
+          </li>
+          <li class="li__details li--gray">
+            <div>
+              <i class="fa fa-bookmark"></i>
+              <span>Pages</span>
+            </div>
+            <b>></b>
+          </li>
+          <li class="li--dark"><span>ADDONS</span></li>
+          <li class="li--gray">
+            <i class="fa fa-area-chart"></i>
+            <span>Cahrts</span>
+          </li>
+          <li class="li--gray">
+            <i class="fa fa-table"></i>
+            <span>Labels</span>
+          </li>
+        </ul>
+      </nav>
+    </aside>
 
-  <script type="module" src="./js/main.js"></script>
+    <section>
+
+      <header class="section__header">
+        <h1>User adminstration</h1>
+
+        <table class="table__newUser">
+          <tbody>
+            <tr>
+              <td class="td__message">
+                <p class="p__message"></p>
+              </td>
+              <td>
+                <input class="input name__input" type="text" placeholder="Név">
+              </td>
+              <td>
+                <input class="input email__input" type="text" placeholder="Email cím">
+              </td>
+              <td>
+                <input class="input address__input" type="text" placeholder="Postai cím">
+              </td>
+              <td>
+                <button class="newUser">Új felhasználó</button>
+              </td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </header>
+
+      <table class="table">
+        <thead>
+          <th>Azonosító</th>
+          <th>Név</th>
+          <th>Email cím</th>
+          <th>Postai cím</th>
+          <th class="update__column">Módosítás</th>
+          <th class="delete__column">Törlés</th>
+        </thead>
+        <tbody class="table__body">
+
+        </tbody>
+      </table>
+    </section>
+
+    <script type="module" src="./js/main.js"></script>
 </body>
 
 </html>

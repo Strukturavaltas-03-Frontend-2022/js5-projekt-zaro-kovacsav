@@ -33,18 +33,20 @@ Az alkalmazás jelenítse meg egy táblázatban a felhasználók adatait.
 - - A Szerkesztés gombra kattintva a user adatai az id kivételével módosíthatók lesznek a táblázaton belül. Egyszerű text inputmezőket használj.
 - - A Szerkesztés gombra kattintás után ez a gomb eltűnik, ugyanúgy, mint a Törlés gomb, helyette egy Mentés és Visszavonás gomb jelenjen meg.
 
-* A Mentés gombra kattintva validálni kell a beírt adatokat.
-* A validáláshoz reguláris kifejezéseket használj.
-* Amennyiben a beírt adatok nem validak, egy hibaüzenetet kell megjeleníteni, amely 5 másodperc után eltűnik.
-* Amennyiben az adatok validak, mind az adatbázisban, mind a DOM-ban kerüljenek mentésre.
-* Ebben az esetben is meg kell jeleníteni egy üzenetet, amely 5 másodpercig látszódik. Egyszerre több üzenet is látszódhat.
-* A hibáról és a sikeres módosításról szóló üzenetek dizájn alapján is legyenek megkülönböztethetők.
+-- A Mentés gombra kattintva validálni kell a beírt adatokat.
+-- A validáláshoz reguláris kifejezéseket használj.
+-- Amennyiben a beírt adatok nem validak, egy hibaüzenetet kell megjeleníteni, amely 5 másodperc után eltűnik.
 
-- - A mentés után ne lehessen tovább szerkeszteni az adatokat.
-- - Amíg egy user adatai szerkesztés alatt állnak, ne lehessen más user adatait szerkeszteni, sem törölni.
+-- Amennyiben az adatok validak, mind az adatbázisban, mind a DOM-ban kerüljenek mentésre.
 
-* Amennyiben valaki mégis rákattint valamelyik másik Törlés vagy Szerkesztés gombra, jelenlen meg 5 másodpercre az alábbi hibaüzenet: “Először be kell fejezned az aktuális szerkesztést”!
-* A Visszavonás gombra kattintva a user eredeti, tehát a szerkesztés előtti adatai íródjanak vissza. Újra a Szerkesztés és Törlés gomb látszódjon.
+- Ebben az esetben is meg kell jeleníteni egy üzenetet, amely 5 másodpercig látszódik. Egyszerre több üzenet is látszódhat.
+- A hibáról és a sikeres módosításról szóló üzenetek dizájn alapján is legyenek megkülönböztethetők.
+
+-- A mentés után ne lehessen tovább szerkeszteni az adatokat.
+Amíg egy user adatai szerkesztés alatt állnak, ne lehessen más user adatait szerkeszteni, sem törölni.
+
+- Amennyiben valaki mégis rákattint valamelyik másik Törlés vagy Szerkesztés gombra, jelenlen meg 5 másodpercre az alábbi hibaüzenet: “Először be kell fejezned az aktuális szerkesztést”!
+- A Visszavonás gombra kattintva a user eredeti, tehát a szerkesztés előtti adatai íródjanak vissza. Újra a Szerkesztés és Törlés gomb látszódjon.
 
 Legyen lehetőség új felhasználók létrehozására. Ehhez egy formot kell készíteni.
 
