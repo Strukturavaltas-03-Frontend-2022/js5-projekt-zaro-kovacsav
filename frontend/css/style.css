@@ -50,6 +50,10 @@ html, body {
   margin-right: 10px;
 }
 
+.language__icon:hover{
+  cursor: pointer;
+}
+
 .header__search {
   display: inline;
   float: right;
@@ -197,13 +201,11 @@ table {
   border-collapse: collapse;
   width: 100%;
   padding: 10px;
+  margin-bottom: 50px;
 }
 
 th {
   line-height: 2rem;
-  /*position: -webkit-sticky;
-  position: sticky;
-  top: 154px;*/
   padding-top: 20px;
   background-color: rgb(245, 245, 245);
   font-size: 1.2rem;
@@ -214,11 +216,11 @@ th {
 }
 
 tr:nth-child(even) {
-  background-color: rgb(230,230,230);
+  background-color: rgb(235, 235, 235);
 }
 
 tr:nth-child(odd) {
-  background-color: #ffffff;
+  background-color: rgb(240, 240, 240);
 }
 
 th, td {
@@ -236,7 +238,11 @@ th, td {
 }
 
 .input__active {
-  background-color: rgb(255, 255, 255);;
+  background-color: rgb(255, 255, 255);
+}
+
+.name__input, .email__input, .address__input {
+  background-color: rgb(255, 255, 255);
 }
 
 .row__button {
@@ -250,7 +256,7 @@ i {
   padding-right: 5px;
 }
 
-i:hover {
+button:hover {
   cursor: pointer;
 }
 
